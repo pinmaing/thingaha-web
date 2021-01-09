@@ -1,9 +1,10 @@
 """school model class, include migrate and CRUD actions"""
 from __future__ import annotations
 
-from typing import Dict, Any
+from typing import Dict, Any, Tuple, List
 
 from flask_sqlalchemy import Pagination
+from sqlalchemy import or_
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import relationship
 
@@ -50,7 +51,7 @@ class SchoolModel(db.Model):
         }
 
     @staticmethod
-    def create_school(new_school) -> bool:
+    def create_school(new_school: SchoolModel) -> bool:
         """
         create new_school
         :param new_school:
@@ -65,14 +66,14 @@ class SchoolModel(db.Model):
             raise error
 
     @staticmethod
-    def get_all_schools(page) -> Pagination:
+    def get_all_schools(page: int = 1, per_page: int = 20) -> Pagination:
         """
         get all school records
         :params page: int
         :return: school Pagination iterator
         """
         try:
-            return db.session.query(SchoolModel).join(AddressModel).paginate(page=page, error_out=False)
+            return db.session.query(SchoolModel).join(AddressModel).paginate(page=page, per_page=per_page, error_out=False)
         except SQLAlchemyError as error:
             raise error
 
@@ -83,7 +84,7 @@ class SchoolModel(db.Model):
         :return: school list
         """
         try:
-            return db.session.query(SchoolModel).join(AddressModel).filter(SchoolModel.id == school_id)
+            return db.session.query(SchoolModel).join(AddressModel).filter(SchoolModel.id == school_id).first()
         except SQLAlchemyError as error:
             raise error
 
@@ -104,7 +105,7 @@ class SchoolModel(db.Model):
             raise error
 
     @staticmethod
-    def update_school(school_id: int, school) -> bool:
+    def update_school(school_id: int, school: SchoolModel) -> bool:
         """
         update school info by id
         :param school_id:
@@ -112,9 +113,9 @@ class SchoolModel(db.Model):
         :return: bool
         """
         try:
-            update_school = db.session.query(SchoolModel).filter(SchoolModel.id == school_id).first()
+            update_school = db.session.query(SchoolModel).get(school_id)
             if not update_school:
-                raise SQLCustomError(description="No record for requested school")
+                raise SQLCustomError(description="No record for requested school id: {}".format(school_id))
             update_school.name = school.name
             update_school.contact_info = school.contact_info
             db.session.commit()
@@ -124,15 +125,33 @@ class SchoolModel(db.Model):
             raise error
 
     @staticmethod
-    def get_all_school_address(page: int = 1) -> Pagination:
+    def get_schools_by_query(page: int, query: str, per_page: int = 20) -> Pagination:
         """
-        get all school address for get all address API
-        :params page integer
-        :return Pagination object
+        search school info by query (name and contact info)
+        :param page:
+        :param query:
+        :param per_page:
+        :return: schools info list
+        """
+
+        try:
+            return db.session.query(SchoolModel).join(AddressModel).filter(
+                or_(SchoolModel.name.ilike('%' + query + '%'),
+                    SchoolModel.contact_info.ilike('%' + query + '%'))).paginate(
+                page=page,
+                per_page=per_page,
+                error_out=False)
+        except SQLAlchemyError as error:
+            raise error
+
+    @staticmethod
+    def get_schools_by_address_ids(school_ids: Tuple) -> List[SchoolModel]:
+        """
+        get school info by ids
+        :param school_ids:
+        :return: schools info list
         """
         try:
-            return db.session.query(AddressModel, SchoolModel). \
-                filter(AddressModel.id == SchoolModel.address_id).filter(
-                AddressModel.type == "school").paginate(page=page, error_out=False)
+            return db.session.query(SchoolModel).filter(SchoolModel.address_id.in_(school_ids)).all()
         except SQLAlchemyError as error:
             raise error

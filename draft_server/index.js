@@ -69,14 +69,17 @@ app.get('/addresses', (req, res) => {
   const json = require('./sample_data/addresses.json')
   res.json(json)
 })
+
 app.get('/students', (req, res) => {
   const json = require('./sample_data/students.json')
   res.json(json)
 })
+
 app.get('/students/:id', (req, res) => {
   const json = require('./sample_data/studentdonator.json')
   res.json(json)
 })
+
 app.post('/students', (req, res) => {
   // This endpoint should actually create a user and return user document back
   const json = {

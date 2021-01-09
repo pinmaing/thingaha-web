@@ -1,5 +1,6 @@
 """school service class for CRUD actions"""
-from typing import List, Any, Optional, Dict
+import traceback
+from typing import List, Any, Optional, Dict, Union, Tuple
 
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -18,29 +19,42 @@ class SchoolService(Service):
     def __init__(self, logger=None) -> None:
         super().__init__(logger)
 
-    def get_all_schools(self, page: int = 1) -> (List, Any):
+    def get_all_schools(self, page: int = 1, per_page: int = 20) -> Dict[str, Union[list, Any]]:
         """
         get all school
         :params:page : int
+        :params:per_page : int
         :return: school list of dict
         """
         try:
             self.logger.info("Get school list")
-            schools = SchoolModel.get_all_schools(page)
-            return self.__return_school_list(schools.items), schools.total
+            schools = SchoolModel.get_all_schools(page, per_page)
+            return {
+                "schools": self.__return_school_list(schools.items),
+                "total_count": schools.total,
+                "current_page": schools.page,
+                "next_page": schools.next_num,
+                "prev_page": schools.prev_num,
+                "pages": schools.pages
+            }
         except SQLAlchemyError as error:
             self.logger.error("Error: {}".format(error))
             raise SQLCustomError(description="GET School SQL ERROR")
 
-    def get_school_by_id(self, school_id: int) -> Optional[List]:
+    def get_school_by_id(self, school_id: int) -> Optional[Dict]:
         """
         get school info by id
         :param school_id:
         :return: school list of dict
         """
         try:
-            self.logger.info("Get school info by school_id:{}".format(school_id))
-            return self.__return_school_list(SchoolModel.get_school_by_id(school_id))
+            self.logger.info(
+                "Get school info by school_id:{}".format(school_id))
+            school = SchoolModel.get_school_by_id(school_id)
+            if not school:
+                raise SQLCustomError(
+                    description="No data for requested school id: {}".format(school_id))
+            return school.school_dict()
         except SQLAlchemyError as error:
             self.logger.error("Error: {}".format(error))
             raise SQLCustomError(description="GET School by ID SQL ERROR")
@@ -67,7 +81,7 @@ class SchoolService(Service):
             raise ValidateFail("School validation fail")
         try:
             return SchoolModel.create_school(SchoolModel(
-                name=data["school_name"],
+                name=data["name"],
                 contact_info=data["contact_info"],
                 address_id=int(data["address_id"])))
         except SQLAlchemyError as error:
@@ -81,7 +95,8 @@ class SchoolService(Service):
         :return:
         """
         try:
-            self.logger.info("Delete school info by school_id:{}".format(school_id))
+            self.logger.info(
+                "Delete school info by school_id:{}".format(school_id))
             return SchoolModel.delete_school_by_id(school_id)
         except SQLAlchemyError as error:
             self.logger.error("Error: {}".format(error))
@@ -100,9 +115,10 @@ class SchoolService(Service):
             self.logger.error("All school field input must be required.")
             raise ValidateFail("School update validation fail")
         try:
-            self.logger.info("update school info by school_id:{}".format(school_id))
+            self.logger.info(
+                "update school info by school_id:{}".format(school_id))
             return SchoolModel.update_school(school_id, SchoolModel(
-                name=data["school_name"],
+                name=data["name"],
                 contact_info=data["contact_info"],
                 address_id=data["address_id"]))
         except SQLAlchemyError as error:
@@ -112,11 +128,38 @@ class SchoolService(Service):
             self.logger.error("Error: {}".format(error))
             raise SQLCustomError(description="No record for requested school")
 
+    def get_schools_by_query(self, page: int, query: str, per_page: int = 20) -> Dict[str, Union[list, Any]]:
+        """
+        get users by query (name, contact info)
+        :params page
+        :params query
+        :return: school list of dict
+        """
+        self.logger.info("Get users list by query %s", query)
+        try:
+            schools = SchoolModel.get_schools_by_query(page, query, per_page)
+            return {
+                "schools": self.__return_school_list(schools.items),
+                "total_count": schools.total,
+                "current_page": schools.page,
+                "next_page": schools.next_num,
+                "prev_page": schools.prev_num,
+                "pages": schools.pages
+            }
+        except SQLAlchemyError:
+            self.logger.error("Get users by name fail. query %s. error %s", query,
+                              traceback.format_exc())
+            raise SQLCustomError(description="GET schools by query SQL ERROR")
+
     @staticmethod
-    def get_all_school_address(page: int = 1) -> (Dict, int):
+    def get_schools_by_address_ids(ids: Tuple) -> Dict[int, SchoolModel]:
         """
-        get all school address for get all address API
-        :param page
+        get schools by address IDs
+        :params ids
+        :return: school list of dict
         """
-        schools_addresses = SchoolModel.get_all_school_address(page)
-        return [address.address_type_dict(school) for address, school in schools_addresses.items], schools_addresses.total
+        try:
+            schools = SchoolModel.get_schools_by_address_ids(ids)
+            return {school.address_id: school for school in schools}
+        except SQLAlchemyError:
+            raise SQLCustomError(description="GET schools by ids query SQL ERROR")

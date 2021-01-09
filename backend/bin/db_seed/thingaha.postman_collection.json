@@ -9,13 +9,20 @@
 			"name": "Login",
 			"request": {
 				"auth": {
-					"type": "noauth"
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MDk2NTQwMzksIm5iZiI6MTYwOTY1NDAzOSwianRpIjoiODRiN2M5OWItNjBlZC00Njk1LTg5ZjAtYTcyYjliMDNhYzg4IiwiZXhwIjoxNjA5NzQwNDM5LCJpZGVudGl0eSI6MSwiZnJlc2giOmZhbHNlLCJ0eXBlIjoiYWNjZXNzIiwidXNlcl9jbGFpbXMiOiJhZG1pbiJ9.rFJy_8E6D4hfuqhR3Y5WTVG8I86F98h8AEOmHrafGOg",
+							"type": "string"
+						}
+					]
 				},
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"email\": \"moemoe@gmail.com\",\n    \"password\": \"123\"\n}",
+					"raw": "{\n    \"email_or_username\": \"MoeMoe\",\n    \"password\": \"123\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -49,7 +56,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MDE5MDcxMDAsIm5iZiI6MTYwMTkwNzEwMCwianRpIjoiNjI4ZjRlZDEtN2U4ZC00MWRmLWExYTEtYWFmYzE3Nzg1ODE0IiwiZXhwIjoxNjAxOTkzNTAwLCJpZGVudGl0eSI6Im1vZW1vZUBnbWFpbC5jb20iLCJmcmVzaCI6ZmFsc2UsInR5cGUiOiJhY2Nlc3MifQ.YolI83L3EB49W6AHLewu8tQCQo--w97DYHXnlLieI2s",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MDcyNTQwNTMsIm5iZiI6MTYwNzI1NDA1MywianRpIjoiOTg0YTBmOGMtN2JjNS00OTFhLTgwMmEtNWQ5OGM0OGRkOGE4IiwiZXhwIjoxNjA3MzQwNDUzLCJpZGVudGl0eSI6Ik1vZU1vZSIsImZyZXNoIjpmYWxzZSwidHlwZSI6ImFjY2VzcyIsInVzZXJfY2xhaW1zIjoiYWRtaW4ifQ.qHvlcDbawuOFHd6bUj4gSRv8lByDoRyE5eipSYs7u-U",
 							"type": "string"
 						}
 					]
@@ -57,8 +64,8 @@
 				"method": "GET",
 				"header": [],
 				"body": {
-					"mode": "raw",
-					"raw": "",
+					"mode": "urlencoded",
+					"urlencoded": [],
 					"options": {
 						"raw": {
 							"language": "json"
@@ -260,7 +267,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MDA5MzI4OTUsIm5iZiI6MTYwMDkzMjg5NSwianRpIjoiM2UwMjdmNGYtZTBkYy00YmJlLThlNTgtNTAxYjllZjMxZTdkIiwiZXhwIjoxNjAxMDE5Mjk1LCJpZGVudGl0eSI6Im1vZW1vZUBnbWFpbC5jb20iLCJmcmVzaCI6ZmFsc2UsInR5cGUiOiJhY2Nlc3MifQ.9FES3WdT0GL9Cvn0R6EoaK_AlvDHScIBJ4DnLCrg6Iw",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MDQyMTY5MTUsIm5iZiI6MTYwNDIxNjkxNSwianRpIjoiMmY5ZTQxZWMtY2JiZC00YWUyLThkMjMtZDAyOGNmY2VhZmI2IiwiZXhwIjoxNjA0MzAzMzE1LCJpZGVudGl0eSI6Im1vZW1vZUBnbWFpbC5jb20iLCJmcmVzaCI6ZmFsc2UsInR5cGUiOiJhY2Nlc3MifQ.K99hA47X4vkaM6nShCCtwy5EZ7hmpGoBZQLjn4DbbuI",
 							"type": "string"
 						}
 					]
@@ -269,7 +276,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "",
+					"raw": "{\n      \"user_id\": 1,\n      \"attendance_id\": 2,\n      \"transfer_id\": 1,\n      \"month\": \"january\",\n      \"year\": 2020,\n      \"mmk_amount\": 3000.0,\n      \"jpy_amount\": 0.0,\n      \"paid_at\": \"2020-02-02\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -277,7 +284,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:5000/api/v1/attendances/2",
+					"raw": "http://localhost:5000/api/v1/attendances/3",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -287,7 +294,7 @@
 						"api",
 						"v1",
 						"attendances",
-						"2"
+						"3"
 					]
 				}
 			},
@@ -469,7 +476,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MDA5MzQzNzYsIm5iZiI6MTYwMDkzNDM3NiwianRpIjoiMjg4NGU1ZDEtMThmNS00Y2YxLTgwYjItNjllMzhiNDlhZmVkIiwiZXhwIjoxNjAxMDIwNzc2LCJpZGVudGl0eSI6Im1vZW1vZUBnbWFpbC5jb20iLCJmcmVzaCI6ZmFsc2UsInR5cGUiOiJhY2Nlc3MifQ.AWgVw1b6xyi6kOrJXCR3x_l6_lusW2_X16SMCOgyzeo",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MDUzNjEwOTAsIm5iZiI6MTYwNTM2MTA5MCwianRpIjoiZjA4OGU2ZmUtNjUwZi00MDI3LWE0NDctZmMwMGY2MWY4NjBmIiwiZXhwIjoxNjA1NDQ3NDkwLCJpZGVudGl0eSI6Im1vZW1vZTRAZ21haWwuY29tIiwiZnJlc2giOmZhbHNlLCJ0eXBlIjoiYWNjZXNzIn0.iKGCBIREfbsiaeSAZsT3B0Z44upcPIYBbRuhxc5tF5E",
 							"type": "string"
 						}
 					]
@@ -478,7 +485,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"school_name\": \"No.(21)Nyanungdon\",\n    \"contact_info\": \"0988898754\",\n    \"district\": \"ayeyarwady\",\n    \"division\": \"ayeyarwady\",\n    \"street_address\": \"18th street\",\n    \"township\": \"MyaeNiGone\"\n}",
+					"raw": "{ \"school_name\": \"No.(21)Nyanungdon\",\n    \"contact_info\": \"098\",\n    \"district\": \"yangon\",\n    \"division\": \"yangon\",\n    \"street_address\": \"18 street\",\n    \"township\": \"MyaeNiGone\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -518,7 +525,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"school_name\": \"No.(11)Nyanungdon\",\n    \"contact_info\": \"098\",\n    \"address_id\": 4,\n    \"district\": \"yangon\",\n    \"division\": \"yangon\",\n    \"street_address\": \"20 street\",\n    \"township\": \"MyaeNiGone\"\n}",
+					"raw": "{ \n    \"name\": \"No.(21)Nyanungdon\",\n    \"contact_info\": \"098\",\n    \"address\": {\n    \"district\": \"yangon\",\n    \"division\": \"yangon\",\n    \"street_address\": \"18 street\",\n    \"township\": \"MyaeNiGone\"\n    }\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -637,7 +644,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MDIxNjA3NTAsIm5iZiI6MTYwMjE2MDc1MCwianRpIjoiMTRjYzZkZDgtOGI5Ny00MjFjLWE3YzktYjM2NmY3NWE1N2U3IiwiZXhwIjoxNjAyMjQ3MTUwLCJpZGVudGl0eSI6Im1vZW1vZUBnbWFpbC5jb20iLCJmcmVzaCI6ZmFsc2UsInR5cGUiOiJhY2Nlc3MifQ.r5lo4hoiTR9jeauerbQSovpwaBY24xL-HmREffaopRw",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MDYzMDQxMjQsIm5iZiI6MTYwNjMwNDEyNCwianRpIjoiM2Q5MGZlMmYtZjQ4ZS00OGNjLTkxZTUtYmEyNWZiMGE5NzVkIiwiZXhwIjoxNjA2MzkwNTI0LCJpZGVudGl0eSI6Ik1vZU1vZSIsImZyZXNoIjpmYWxzZSwidHlwZSI6ImFjY2VzcyIsInVzZXJfY2xhaW1zIjoiYWRtaW4ifQ.1eyBTzo0taZp-Z6-19UPLJBrjGl1463T8lCUtmEt3sg",
 							"type": "string"
 						}
 					]
@@ -646,7 +653,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\": \"MoeMoe\", \n    \"email\": \"moemoe11@gmail.com\",\n    \"password\" : \"123\", \n    \"role\": \"admin\", \n    \"country\": \"mm\",\n    \"donation_active\": true,\n    \"district\": \"pabedan\",\n    \"division\": \"yangon\",\n    \"street_address\": \"18 street\",\n    \"township\": \"La Thar township\",\n    \"type\": \"user\"\n}",
+					"raw": "{\n  \"name\": \"MoeMoe\",\n  \"email\": \"moemoe5@gmail.com\",\n  \"password\": \"123\",\n  \"role\": \"admin\",\n  \"country\": \"mm\",\n  \"address\": {\n    \"district\": \"pabedan\",\n    \"division\": \"yangon\",\n    \"street_address\": \"18 street\",\n    \"township\": \"La Thar township\"\n  }\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -677,7 +684,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MDA5MzUwNTEsIm5iZiI6MTYwMDkzNTA1MSwianRpIjoiN2VmMDY4NGYtMzFkMC00YTgxLWI4ODgtODlhZTYwNmYyMmY1IiwiZXhwIjoxNjAxMDIxNDUxLCJpZGVudGl0eSI6Im1vZW1vZUBnbWFpbC5jb20iLCJmcmVzaCI6ZmFsc2UsInR5cGUiOiJhY2Nlc3MifQ.ZKvR_-7DeA7S-okSEhXLqR_tg0MJTkM-KtY6AuuLn8I",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MDc3Njc4MjksIm5iZiI6MTYwNzc2NzgyOSwianRpIjoiZTJhNmFlNGYtM2VjNy00MmU3LWFhY2ItNDBlMTlmNGM4MzQ5IiwiZXhwIjoxNjA3ODU0MjI5LCJpZGVudGl0eSI6MSwiZnJlc2giOmZhbHNlLCJ0eXBlIjoiYWNjZXNzIiwidXNlcl9jbGFpbXMiOiJhZG1pbiJ9.Sq1VvicOGAo5GdngtRD8CrWOXlZlTPejiaEE_jPcWLM",
 							"type": "string"
 						}
 					]
@@ -686,7 +693,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"id\": 2,\n    \"name\": \"Moemoe1\",\n    \"email\": \"moemoe1@gmail.com\",\n    \"password\" : \"1234\", \n    \"role\": \"admin\",\n    \"country\": \"mm\",\n    \"address_id\": 4,\n    \"district\": \"pabedan\",\n    \"division\": \"yangon\",\n    \"street_address\": \"19 street\",\n    \"township\": \"La Thar township\"\n}",
+					"raw": "{\n  \"username\": \"khinezarthwe\",\n  \"display_name\": \"thingyan_test01\",\n  \"email\": \"moemoe@gmail.com\",\n  \"password\": \"123\",\n  \"role\": \"admin\",\n  \"country\": \"mm\",\n    \"district\": \"pabedan\",\n    \"division\": \"yangon\",\n    \"street_address\": \"18 street\",\n    \"township\": \"La Thar1 township\",\n  \"donation_active\": true\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -694,7 +701,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:5000/api/v1/users/2",
+					"raw": "http://localhost:5000/api/v1/users/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -704,7 +711,7 @@
 						"api",
 						"v1",
 						"users",
-						"2"
+						"1"
 					]
 				}
 			},
@@ -1493,7 +1500,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MDQzMjY1NDksIm5iZiI6MTYwNDMyNjU0OSwianRpIjoiMjRlZDU2YTAtMDlhYi00Y2FiLWI1OTEtNzFmZDM4N2MzMzhhIiwiZXhwIjoxNjA0NDEyOTQ5LCJpZGVudGl0eSI6Im1vZW1vZUBnbWFpbC5jb20iLCJmcmVzaCI6ZmFsc2UsInR5cGUiOiJhY2Nlc3MifQ._7V98IPd-OoS29wDqCgcLd1w-e4MZ_9A-WC3m-7FmSQ",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MDUzNjIwMDksIm5iZiI6MTYwNTM2MjAwOSwianRpIjoiMWE4YjVjNmMtZDAzNC00YmI3LTg3ZDEtNTA2NDQ4OGUzNTQxIiwiZXhwIjoxNjA1NDQ4NDA5LCJpZGVudGl0eSI6Im1vZW1vZTRAZ21haWwuY29tIiwiZnJlc2giOmZhbHNlLCJ0eXBlIjoiYWNjZXNzIn0.XlemInDnel6tkY9wYlRW4zlebfxDyZBzTjlG1eDVYFg",
 							"type": "string"
 						}
 					]
@@ -1502,7 +1509,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"district\": \"မရမ်းကုန်းမြို့နယ်\", \n  \"division\": \"yangon\", \n  \"street_address\": \"ဉီးဘအိုလမ်း\", \n  \"township\": \"အမှတ်(၂)ရပ်ကွက်\",\n  \"type\" : \"student\",\n  \"deactivated_at\" : \"2020-07-26T03:37:05.836Z\",\n  \"birth_date\": \"12-08-2006\", \n  \"father_name\": \"ဉီးလှ\", \n  \"mother_name\": \"ဒေါ်မြ\", \n  \"name\": \"မောင်မောင်\", \n  \"parents_occupation\": \"လယ်သမား\", \n  \"photo\": \"https://i.pinimg.com/originals/a7/65/45/a7654580f501e9501e329978bebd051b.jpg\"\n}",
+					"raw": "{\n  \"address\":{\n    \"district\": \"မရမ်းကုန်းမြို့နယ်\", \n    \"division\": \"yangon\", \n    \"street_address\": \"ဉီးဘအိုလမ်း\", \n    \"township\": \"အမှတ်(၂)ရပ်ကွက်\"\n  },\n  \"deactivated_at\" : \"2020-07-26T03:37:05.836Z\",\n  \"birth_date\": \"12-08-2006\", \n  \"father_name\": \"ဉီးလှ\", \n  \"mother_name\": \"ဒေါ်မြ\", \n  \"name\": \"မောင်မောင်\", \n  \"parents_occupation\": \"လယ်သမား\", \n  \"photo\": \"https://i.pinimg.com/originals/a7/65/45/a7654580f501e9501e329978bebd051b.jpg\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1533,7 +1540,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MDQzMjY1NDksIm5iZiI6MTYwNDMyNjU0OSwianRpIjoiMjRlZDU2YTAtMDlhYi00Y2FiLWI1OTEtNzFmZDM4N2MzMzhhIiwiZXhwIjoxNjA0NDEyOTQ5LCJpZGVudGl0eSI6Im1vZW1vZUBnbWFpbC5jb20iLCJmcmVzaCI6ZmFsc2UsInR5cGUiOiJhY2Nlc3MifQ._7V98IPd-OoS29wDqCgcLd1w-e4MZ_9A-WC3m-7FmSQ",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MDc3Njc4MjksIm5iZiI6MTYwNzc2NzgyOSwianRpIjoiZTJhNmFlNGYtM2VjNy00MmU3LWFhY2ItNDBlMTlmNGM4MzQ5IiwiZXhwIjoxNjA3ODU0MjI5LCJpZGVudGl0eSI6MSwiZnJlc2giOmZhbHNlLCJ0eXBlIjoiYWNjZXNzIiwidXNlcl9jbGFpbXMiOiJhZG1pbiJ9.Sq1VvicOGAo5GdngtRD8CrWOXlZlTPejiaEE_jPcWLM",
 							"type": "string"
 						}
 					]
@@ -1542,7 +1549,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"district\": \"မရမ်းကုန်းမြို့နယ်\", \n  \"division\": \"yangon\", \n  \"street_address\": \"ဉီးဘအိုလမ်း\", \n  \"township\": \"အမှတ်(၂)ရပ်ကွက်\",\n  \"type\" : \"student\",\n  \"address_id\": 1,\n  \"deactivated_at\" : \"2020-07-26T03:37:05.836Z\",\n  \"birth_date\": \"12-08-2006\", \n  \"father_name\": \"ဉီးလှ\", \n  \"mother_name\": \"ဒေါ်မြ\", \n  \"name\": \"မောင်မောင်\", \n  \"parents_occupation\": \"လယ်သမား\", \n  \"photo\": \"https://i.pinimg.com/originals/a7/65/45/a7654580f501e9501e329978bebd051b.jpg\"\n}",
+					"raw": "{\n  \"deactivated_at\" : \"2020-07-26T03:37:05.836Z\",\n  \"birth_date\": \"12-08-2006\", \n  \"father_name\": \"ဉီးလှ\", \n  \"mother_name\": \"ဒေါ်မြ\", \n  \"name\": \"မောင်မောင်\", \n  \"parents_occupation\": \"လယ်သမား\", \n  \"photo\": \"https://i.pinimg.com/originals/a7/65/45/a7654580f501e9501e329978bebd051b.jpg\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1602,6 +1609,487 @@
 						"v1",
 						"students",
 						"4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ExtraFunds[GET][ID]",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MDQyMTY5MTUsIm5iZiI6MTYwNDIxNjkxNSwianRpIjoiMmY5ZTQxZWMtY2JiZC00YWUyLThkMjMtZDAyOGNmY2VhZmI2IiwiZXhwIjoxNjA0MzAzMzE1LCJpZGVudGl0eSI6Im1vZW1vZUBnbWFpbC5jb20iLCJmcmVzaCI6ZmFsc2UsInR5cGUiOiJhY2Nlc3MifQ.K99hA47X4vkaM6nShCCtwy5EZ7hmpGoBZQLjn4DbbuI",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/v1/extra_funds/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"extra_funds",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ExtraFunds[GET][ALL]",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MDQyMTY5MTUsIm5iZiI6MTYwNDIxNjkxNSwianRpIjoiMmY5ZTQxZWMtY2JiZC00YWUyLThkMjMtZDAyOGNmY2VhZmI2IiwiZXhwIjoxNjA0MzAzMzE1LCJpZGVudGl0eSI6Im1vZW1vZUBnbWFpbC5jb20iLCJmcmVzaCI6ZmFsc2UsInR5cGUiOiJhY2Nlc3MifQ.K99hA47X4vkaM6nShCCtwy5EZ7hmpGoBZQLjn4DbbuI",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/v1/extra_funds",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"extra_funds"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ExtraFunds[DELETE][ID]",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MDQyMTY5MTUsIm5iZiI6MTYwNDIxNjkxNSwianRpIjoiMmY5ZTQxZWMtY2JiZC00YWUyLThkMjMtZDAyOGNmY2VhZmI2IiwiZXhwIjoxNjA0MzAzMzE1LCJpZGVudGl0eSI6Im1vZW1vZUBnbWFpbC5jb20iLCJmcmVzaCI6ZmFsc2UsInR5cGUiOiJhY2Nlc3MifQ.K99hA47X4vkaM6nShCCtwy5EZ7hmpGoBZQLjn4DbbuI",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/v1/extra_funds/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"extra_funds",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ExtraFunds[PUT][ID]",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MDQyMTY5MTUsIm5iZiI6MTYwNDIxNjkxNSwianRpIjoiMmY5ZTQxZWMtY2JiZC00YWUyLThkMjMtZDAyOGNmY2VhZmI2IiwiZXhwIjoxNjA0MzAzMzE1LCJpZGVudGl0eSI6Im1vZW1vZUBnbWFpbC5jb20iLCJmcmVzaCI6ZmFsc2UsInR5cGUiOiJhY2Nlc3MifQ.K99hA47X4vkaM6nShCCtwy5EZ7hmpGoBZQLjn4DbbuI",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"mmk_amount\": 100000,\n    \"transfer_id\": 4\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/v1/extra_funds/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"extra_funds",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User[GET][FILTER]",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MDQ4MDUzNzYsIm5iZiI6MTYwNDgwNTM3NiwianRpIjoiY2ZmNDIwMDMtYTNhNi00NjYyLTg0YjctZTIzNmE0N2ZhMDI0IiwiZXhwIjoxNjA0ODkxNzc2LCJpZGVudGl0eSI6Im1vZW1vZUBnbWFpbC5jb20iLCJmcmVzaCI6ZmFsc2UsInR5cGUiOiJhY2Nlc3MifQ.bTGsj8pAzMEbRDdjomXmJGQoLq0IxECfgZG6sRIiwQ4",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"mmk_amount\": 3000,\n    \"transfer_id\": 5\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/v1/users?country=mm&page=2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"users"
+					],
+					"query": [
+						{
+							"key": "country",
+							"value": "mm"
+						},
+						{
+							"key": "page",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User[GET][SEARCH]",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MDQ4MDUzNzYsIm5iZiI6MTYwNDgwNTM3NiwianRpIjoiY2ZmNDIwMDMtYTNhNi00NjYyLTg0YjctZTIzNmE0N2ZhMDI0IiwiZXhwIjoxNjA0ODkxNzc2LCJpZGVudGl0eSI6Im1vZW1vZUBnbWFpbC5jb20iLCJmcmVzaCI6ZmFsc2UsInR5cGUiOiJhY2Nlc3MifQ.bTGsj8pAzMEbRDdjomXmJGQoLq0IxECfgZG6sRIiwQ4",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"mmk_amount\": 3000,\n    \"transfer_id\": 5\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/v1/users/search?query=moemoe@gmail.com",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"search"
+					],
+					"query": [
+						{
+							"key": "query",
+							"value": "moemoe@gmail.com"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Common][MM-division]",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MDQ1MDI4NzIsIm5iZiI6MTYwNDUwMjg3MiwianRpIjoiNGQ5YjI3Y2QtOGUyOC00NDJkLWE4YTItZGNlZTIzZTlmMTkyIiwiZXhwIjoxNjA0NTg5MjcyLCJpZGVudGl0eSI6Im1vZW1vZUBnbWFpbC5jb20iLCJmcmVzaCI6ZmFsc2UsInR5cGUiOiJhY2Nlc3MifQ.LSbOeBLteY90A-BGaO5fkaLQ89p6fKarmE5jqBc1w0s",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"mmk_amount\": 3000,\n    \"transfer_id\": 5\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/v1/mm_divisions",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"mm_divisions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "myanmar_divisions[GET][COMMON API]",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MDQ4MDUzNzYsIm5iZiI6MTYwNDgwNTM3NiwianRpIjoiY2ZmNDIwMDMtYTNhNi00NjYyLTg0YjctZTIzNmE0N2ZhMDI0IiwiZXhwIjoxNjA0ODkxNzc2LCJpZGVudGl0eSI6Im1vZW1vZUBnbWFpbC5jb20iLCJmcmVzaCI6ZmFsc2UsInR5cGUiOiJhY2Nlc3MifQ.bTGsj8pAzMEbRDdjomXmJGQoLq0IxECfgZG6sRIiwQ4",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"mmk_amount\": 3000,\n    \"transfer_id\": 5\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/v1/myanmar_divisions",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"myanmar_divisions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Donation[PUT]",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MDQyMjg2NzIsIm5iZiI6MTYwNDIyODY3MiwianRpIjoiZGVjNDRiYmQtZGQ2My00YTUxLTkzYWUtOTA1ODBjMjBlZGYzIiwiZXhwIjoxNjA0MzE1MDcyLCJpZGVudGl0eSI6Im1vZW1vZUBnbWFpbC5jb20iLCJmcmVzaCI6ZmFsc2UsInR5cGUiOiJhY2Nlc3MifQ.yQSpUGLGYwODDCQ27iG4UcM4ZzYwnLRfjZqIDdc7-TA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n      \"user_id\": 1,\n      \"attendance_id\": 2,\n      \"transfer_id\": 4,\n      \"month\": \"january\",\n      \"year\": 2020,\n      \"mmk_amount\": 3000.0,\n      \"jpy_amount\": 0.0,\n      \"paid_at\": \"2020-02-02\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/v1/donations/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"donations",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User[PUT][PasswordChange]",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MDk2NTQwMzksIm5iZiI6MTYwOTY1NDAzOSwianRpIjoiODRiN2M5OWItNjBlZC00Njk1LTg5ZjAtYTcyYjliMDNhYzg4IiwiZXhwIjoxNjA5NzQwNDM5LCJpZGVudGl0eSI6MSwiZnJlc2giOmZhbHNlLCJ0eXBlIjoiYWNjZXNzIiwidXNlcl9jbGFpbXMiOiJhZG1pbiJ9.rFJy_8E6D4hfuqhR3Y5WTVG8I86F98h8AEOmHrafGOg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"current_password\": \"123\",\n  \"new_password\": \"123\",\n  \"new_confirm_password\": \"123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/v1/users/password",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"password"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User[PUT][Password Reset]",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MDk2NTQwMzksIm5iZiI6MTYwOTY1NDAzOSwianRpIjoiODRiN2M5OWItNjBlZC00Njk1LTg5ZjAtYTcyYjliMDNhYzg4IiwiZXhwIjoxNjA5NzQwNDM5LCJpZGVudGl0eSI6MSwiZnJlc2giOmZhbHNlLCJ0eXBlIjoiYWNjZXNzIiwidXNlcl9jbGFpbXMiOiJhZG1pbiJ9.rFJy_8E6D4hfuqhR3Y5WTVG8I86F98h8AEOmHrafGOg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"user_id\": 1,\n    \"password\": \"123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/v1/users/reset_password",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"reset_password"
 					]
 				}
 			},

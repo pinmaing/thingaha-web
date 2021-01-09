@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import List
 
 from flask_sqlalchemy import Pagination
 from sqlalchemy.exc import SQLAlchemyError
@@ -61,7 +60,7 @@ class DonationModel(db.Model):
         }
 
     @staticmethod
-    def create_donation(new_donation) -> int:
+    def create_donation(new_donation: DonationModel) -> int:
         """
         create new_donation
         :param new_donation:
@@ -75,21 +74,23 @@ class DonationModel(db.Model):
             raise error
 
     @staticmethod
-    def get_all_donations(page) -> Pagination:
+    def get_all_donations(page: int = 1, per_page: int = 20) -> Pagination:
         """
         get all donation records
+        :params page
+        :params per_page
         :return: donation list
         """
         try:
             return db.session.query(DonationModel, UserModel, StudentModel). \
                 filter(DonationModel.user_id == UserModel.id). \
                 filter(DonationModel.attendance_id == AttendanceModel.id). \
-                filter(AttendanceModel.id == StudentModel.id).paginate(page=page, error_out=False)
+                filter(AttendanceModel.id == StudentModel.id).paginate(page=page, per_page=per_page, error_out=False)
         except SQLAlchemyError as error:
             raise error
 
     @staticmethod
-    def get_donation_by_id(donation_id: int) -> List[DonationModel]:
+    def get_donation_by_id(donation_id: int) -> DonationModel:
         """
         get all donation records
         :param donation_id
@@ -100,7 +101,7 @@ class DonationModel(db.Model):
                 filter(DonationModel.user_id == UserModel.id). \
                 filter(DonationModel.attendance_id == AttendanceModel.id). \
                 filter(AttendanceModel.id == StudentModel.id). \
-                filter(DonationModel.id == donation_id)
+                filter(DonationModel.id == donation_id).first()
         except SQLAlchemyError as error:
             raise error
 

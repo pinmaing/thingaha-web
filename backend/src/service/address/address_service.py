@@ -1,11 +1,12 @@
 """address service layer for CRUD action"""
 import traceback
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional, Tuple
 
+from flask_sqlalchemy import Pagination
 from sqlalchemy.exc import SQLAlchemyError
 
 from common.data_schema import address_schema
-from common.error import RequestDataEmpty, SQLCustomError, ValidateFail
+from common.error import RequestDataEmpty, SQLCustomError, ValidateFail, ThingahaCustomError
 from models.address import AddressModel
 from service.school.school_service import SchoolService
 from service.service import Service
@@ -18,15 +19,18 @@ class AddressService(Service):
     address service class for CRUD actions
     define specific params for address service in AddressService Class
     """
+
     def __init__(self, logger=None) -> None:
         super().__init__(logger)
 
-    def create_address(self, data: Dict[str, str]) -> bool:
+    def create_address(self, data: Dict[str, str], flush: bool = False) -> int:
         """
         create new address
         :param data: data dict includes division, district, township, street_address
+        :param flush: default false
         :return: True if creation success else False
         """
+
         if not data:
             raise RequestDataEmpty("Address data is empty")
         if not self.input_validate.validate_json(data, address_schema):
@@ -38,9 +42,10 @@ class AddressService(Service):
                 district=data["district"],
                 township=data["township"],
                 street_address=data["street_address"],
-                type=data["type"]))
+                type=data["type"]), flush=flush)
         except SQLAlchemyError:
-            self.logger.error("Address create fail. error %s", traceback.format_exc())
+            self.logger.error("Address create fail. error %s",
+                              traceback.format_exc())
             raise SQLCustomError("Address create fail")
 
     def update_address_by_id(self, address_id: int, data: Dict[str, str]) -> bool:
@@ -80,9 +85,13 @@ class AddressService(Service):
         self.logger.info("Get address by id %s", address_id)
         try:
             address = AddressModel.get_address_by_id(address_id)
-            return address.as_dict() if address else {}
+            if not address:
+                raise SQLCustomError(
+                    description="No data for requested address id: {}".format(address_id))
+            return address.as_dict()
         except SQLAlchemyError:
-            self.logger.error("Get address by id fail. id %s. error %s", address_id, traceback.format_exc())
+            self.logger.error(
+                "Get address by id fail. id %s. error %s", address_id, traceback.format_exc())
             raise SQLCustomError(description="GET address by ID SQL ERROR")
 
     def delete_address_by_id(self, address_id: int) -> bool:
@@ -95,24 +104,97 @@ class AddressService(Service):
             self.logger.info("Delete address by id", address_id)
             return AddressModel.delete_address(address_id)
         except SQLAlchemyError:
-            self.logger.error("Address delete fail. id %s, error %s", address_id, traceback.format_exc())
+            self.logger.error("Address delete fail. id %s, error %s",
+                              address_id, traceback.format_exc())
             raise SQLCustomError(description="Delete address by ID SQL ERROR")
 
-    def get_all_addresses(self, page: int = 1) -> (List[Dict[str, Any]], int):
+    @staticmethod
+    def __return_address_types(page: int, per_page: int, address_type: str) -> Optional[Tuple[Pagination, Dict]]:
+        """
+        return address by requested types
+        :params page
+        :params :per_page
+        """
+        if address_type not in ["school", "user", "student"]:
+            return None, None
+        else:
+            addresses = AddressModel.get_all_addresses_by_type(page, per_page, address_type)
+            address_ids = tuple([address.id for address in addresses.items])
+            if address_type == "school":
+                return addresses, {address_type: SchoolService.get_schools_by_address_ids(address_ids)}
+            if address_type == "user":
+                return addresses, {address_type: UserService.get_user_by_address_ids(address_ids)}
+            if address_type == "student":
+                return addresses, {address_type: StudentService.get_students_by_address_ids(address_ids)}
+
+    @staticmethod
+    def __get_all_address_records(addresses: Pagination) -> Dict:
+        """
+        get all address records without types
+        :params addresses
+        """
+        schools_address_ids = [address.id for address in addresses.items if address.type == "school"]
+        users_address_ids = [address.id for address in addresses.items if address.type == "user"]
+        students_address_ids = [address.id for address in addresses.items if address.type == "student"]
+        return {
+            "school": SchoolService.get_schools_by_address_ids(tuple(schools_address_ids)),
+            "user": UserService.get_user_by_address_ids(tuple(users_address_ids)),
+            "student": StudentService.get_students_by_address_ids(tuple(students_address_ids))
+        }
+
+    def get_all_addresses(self, page: int = 1, per_page: int = 20, address_type: str = None) -> (List[Dict[str, Any]], int):
         """
         get all addresses
-        :params page
+        :params page int
+        :params per_page int
+        :params address_type int
         :return:
         """
-        self.logger.info("Get all addresses list")
         try:
-            schools, schools_count = SchoolService.get_all_school_address(page)
-            users, users_count = UserService.get_all_user_address(page)
-            student, students_count = StudentService.get_all_student_address(page)
-            return schools + users + student, schools_count+users_count+students_count
+            if address_type:
+                addresses, address_records = self.__return_address_types(page, per_page, address_type)
+            else:
+                addresses = AddressModel.get_all_addresses(page, per_page)
+                address_records = self.__get_all_address_records(addresses)
+            if address_records is None:
+                self.logger.error("Address type should be school or user or student")
+                raise ThingahaCustomError("Address type should be school or user or student")
+            return self.__return_addresses_with_format(addresses, address_records)
         except SQLAlchemyError:
-            self.logger.error("Get all addresses fail. error %s", traceback.format_exc())
+            self.logger.error(
+                "Get all addresses fail. error %s", traceback.format_exc())
             raise SQLCustomError(description="GET address SQL ERROR")
+
+    @staticmethod
+    def __return_addresses_with_format(addresses: Pagination, address_records: Dict) -> Dict[str, List]:
+        """
+        prepare return format for address get all API
+        :params addresses
+        :params address_records
+        """
+        try:
+            return {
+                "addresses": [{
+                    "id": address.id,
+                    "addressable": {
+                        "id": address_records[address.type][address.id].id,
+                        "name": address_records[address.type][address.id].username if address.type == "user" else
+                        address_records[address.type][address.id].name,
+                        "type": address.type
+                    },
+                    "division": address.division,
+                    "district": address.district,
+                    "township": address.township,
+                    "street_address": address.street_address,
+                } for address in addresses.items],
+                "total_count": addresses.total,
+                "current_page": addresses.page,
+                "next_page": addresses.next_num,
+                "prev_page": addresses.prev_num,
+                "pages": addresses.pages
+            }
+        except KeyError:
+            raise ThingahaCustomError("Address key mismatch error")
 
     @staticmethod
     def __return_address_list(addresses: List[AddressModel]) -> List[Dict[str, Any]]:
@@ -122,3 +204,21 @@ class AddressService(Service):
         :return:
         """
         return [address.as_dict() for address in addresses]
+
+    def search_address_by_query(self, page: int, query: str, per_page: int = 20) -> (List[Dict[str, Any]], int):
+        """
+        get users by query (name, email)
+        :param query
+        :param page
+        :param per_page
+        :return: users list of dict
+        """
+        self.logger.info("Get users list by query %s", query)
+        try:
+            addresses = AddressModel.search_address_by_query(page, per_page, query)
+            address_records = self.__get_all_address_records(addresses)
+            return self.__return_addresses_with_format(addresses, address_records)
+        except SQLAlchemyError:
+            self.logger.error("Get users by name fail. query %s. error %s", query,
+                              traceback.format_exc())
+            raise SQLCustomError(description="GET user by query SQL ERROR")

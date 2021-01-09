@@ -5,6 +5,7 @@ from datetime import date
 from typing import List
 
 from flask_sqlalchemy import Pagination
+from sqlalchemy import and_
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import relationship
 
@@ -55,7 +56,7 @@ class AttendanceModel(db.Model):
         }
 
     @staticmethod
-    def create_attendance(new_attendance) -> bool:
+    def create_attendance(new_attendance: AttendanceModel) -> bool:
         """
         create new_attendance
         :param new_attendance:
@@ -70,16 +71,70 @@ class AttendanceModel(db.Model):
             raise error
 
     @staticmethod
-    def get_all_attendances(page) -> Pagination:
+    def get_all_attendances(page: int = 1, per_page: int = 20) -> Pagination:
         """
         get all Attendance records
         :params page
-        :return: Attendance list
+        :params per_page
+        :return: Attendance Pagination Object
         """
         try:
             return db.session.query(AttendanceModel, SchoolModel, StudentModel).\
                 filter(AttendanceModel.school_id == SchoolModel.id).\
-                filter(AttendanceModel.student_id == StudentModel.id).paginate(page=page, error_out=False)
+                filter(AttendanceModel.student_id == StudentModel.id).paginate(page=page, per_page=per_page, error_out=False)
+        except SQLAlchemyError as error:
+            raise error
+
+    @staticmethod
+    def get_attendances_by_year(page: int, year: int, per_page: int = 20) -> Pagination:
+        """
+        get all attendance by year
+        :params page
+        :params year
+        :params per_page
+        :return: Attendance Pagination Object
+        """
+        try:
+            return db.session.query(AttendanceModel, SchoolModel, StudentModel).\
+                filter(AttendanceModel.school_id == SchoolModel.id).\
+                filter(AttendanceModel.student_id == StudentModel.id).\
+                filter(AttendanceModel.year == year).paginate(page=page,  per_page=per_page, error_out=False)
+        except SQLAlchemyError as error:
+            raise error
+
+    @staticmethod
+    def get_attendances_by_grade(page: int, grade: str, per_page: int = 20) -> Pagination:
+        """
+        get all attendances by grade
+        :params page
+        :params per_page
+        :params grade
+        :return: Attendance Pagination Object
+        """
+        try:
+            return db.session.query(AttendanceModel, SchoolModel, StudentModel). \
+                filter(AttendanceModel.school_id == SchoolModel.id). \
+                filter(AttendanceModel.student_id == StudentModel.id). \
+                filter(AttendanceModel.grade == grade).paginate(page=page, per_page=per_page, error_out=False)
+        except SQLAlchemyError as error:
+            raise error
+
+    @staticmethod
+    def get_attendances_by_grade_year(page: int, grade: str, year: int, per_page: int = 20) -> Pagination:
+        """
+        get all attendances by grade and year
+        :params page
+        :params grade
+        :params year
+        :params per_page
+        :return: Attendance Pagination Object
+        """
+        try:
+            return db.session.query(AttendanceModel, SchoolModel, StudentModel). \
+                filter(AttendanceModel.school_id == SchoolModel.id). \
+                filter(AttendanceModel.student_id == StudentModel.id).\
+                filter(and_(AttendanceModel.grade == grade, AttendanceModel.year == year)).\
+                paginate(page=page, per_page=per_page, error_out=False)
         except SQLAlchemyError as error:
             raise error
 
@@ -94,7 +149,7 @@ class AttendanceModel(db.Model):
             return db.session.query(AttendanceModel, SchoolModel, StudentModel). \
                 filter(AttendanceModel.school_id == SchoolModel.id). \
                 filter(AttendanceModel.student_id == StudentModel.id).\
-                filter(AttendanceModel.id == attendance_id)
+                filter(AttendanceModel.id == attendance_id).first()
         except SQLAlchemyError as error:
             raise error
 

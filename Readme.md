@@ -20,6 +20,7 @@ For project background and current goals for v1.0, please read the [Wiki Home Pa
 
   - cd into the `backend` directory and run `docker-compose up`. (Note: all the following commands assume we're in `backend` directory as working directory)
   - it should create `backend_web_1` container and `backend_db_1` containers.
+  - you can check using `docker ps` command for 2 containers.
   - Then, optionally, seed database using the following command:
     `docker exec backend_web_1 /usr/bin/python3 ../src/db_seed.py`
   - You should be able to go to `http://localhost:5000/api/v1/users` and should see a json error message.
@@ -28,6 +29,18 @@ For project background and current goals for v1.0, please read the [Wiki Home Pa
 
   - If there is any change in `requirements.txt`, we will need to rebuild the containers. To rebuild containers, we use:
     `docker-compose build` command.
+
+  Troubleshooting with docker FAQ
+
+  - I need to delete the database and recreate it again. What do I do?
+    - Run `docker exec -it backend_db_1 /bin/sh` to get into the shell of db container.
+    - TO delete the db:
+      - Run `dropdb -U thingaha thingaha_dev` (Using default username thingaha and password thingaha here. Replace with your credentials if you happen to have overriden it.)
+    - Then, to recreate db:
+      - Run `createdb -U thingaha thingaha_dev` (Using default username thingaha and password thingaha here. Replace with your credentials if you happen to have overriden it.)
+    - After db is created, exit the db container shell using `exit` command and restart currently running `docker-compose up`.
+    - Once it's up and migrated, run the db seeding command back again into the backend_web_1 container.
+      - `docker exec backend_web_1 /usr/bin/python3 ../src/db_seed.py`
 
 #### Native env setup using Anaconda
 
@@ -47,6 +60,8 @@ pip install -r ~/thingaha/backend/requirements.txt
 
 - DB migrate
 
+create table and insert data to table
+
 ```shell script
 for linux, macOS -> go backend/bin and run -> ./db_migrate.sh
 for windows -> go to backend\bin and run -> db_migrate.bat
@@ -54,14 +69,6 @@ for windows -> go to backend\bin and run -> db_migrate.bat
 
 #memo
 postgres url be like [DB_TYPE]+[DB_CONNECTOR]://[USERNAME]:[PASSWORD]@[HOST]:[PORT]/[DB_NAME]
-```
-
-- DB Seed
-
-```shell script
-for linux, macOS -> go backend/bin and run -> ./db_seed.sh
-for windows -> go to backend\bin and run -> db_seed.bat
-
 ```
 
 - ERD Diagram for Thingaha Project
@@ -122,3 +129,7 @@ Main UI framework is [Material UI](https://material-ui.com/). For component styl
   - To set up for windows developmemt, please update frontend\package.json
     - `"start": "PORT=5001 react-scripts start"` to `"start": "set PORT=5001 && react-scripts start"`
   - The frontend dev server is configured to run on port `5001`. Try navigating to [http://localhost:5001/](http://localhost:5001/) to see the app in action.
+
+  - initial login information
+    - username: `moemoe@gmail.com`
+    - password: `123`

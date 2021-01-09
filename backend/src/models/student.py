@@ -2,9 +2,10 @@
 from __future__ import annotations
 
 from datetime import datetime, date
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 
 from flask_sqlalchemy import Pagination
+from sqlalchemy import or_
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import relationship
 
@@ -65,7 +66,7 @@ class StudentModel(db.Model):
         }
 
     @staticmethod
-    def get_student_by_id(student_id: int) -> List[StudentModel]:
+    def get_student_by_id(student_id: int) -> Optional[StudentModel]:
         """
         get student by id
         :param student_id:
@@ -74,62 +75,38 @@ class StudentModel(db.Model):
         try:
             return db.session.query(StudentModel). \
                 join(AddressModel). \
-                filter(StudentModel.id == student_id)
+                filter(StudentModel.id == student_id).first()
         except SQLAlchemyError as error:
             raise error
 
     @staticmethod
-    def get_students_by_name(name) -> List[StudentModel]:
+    def get_student_by_address_ids(addresses_ids: tuple) -> List[StudentModel]:
         """
-        get students by name (as name is not unique, multiple records can be returned)
-        :param name:
-        :return: student info list
+        get student by ids
+        :param addresses_ids:
+        :return: student info
         """
         try:
-            return db.session.query(StudentModel).join(AddressModel).filter(StudentModel.name == name)
+            return db.session.query(StudentModel).filter(StudentModel.address_id.in_(addresses_ids)).all()
         except SQLAlchemyError as error:
             raise error
 
     @staticmethod
-    def get_students_by_birth_date(birth_date) -> List[StudentModel]:
-        """
-        get students by birth_date (as birth_date is not unique, multiple records can be returned)
-        :param birth_date:
-        :return: student info list
-        """
-        try:
-            return db.session.query(StudentModel).join(AddressModel).filter(StudentModel.birth_date == birth_date)
-        except SQLAlchemyError as error:
-            raise error
-
-    @staticmethod
-    def get_all_students(page) -> Pagination:
+    def get_all_students(page: int = 1, per_page: int = 20) -> Pagination:
         """
         get all students
+        :param page:
+        :param per_page:
         :return: students list of dict
         """
         try:
-            return db.session.query(StudentModel).join(AddressModel). \
-                paginate(page=page, error_out=False)
+            return db.session.query(StudentModel).join(AddressModel).\
+                paginate(page=page, per_page=per_page, error_out=False)
         except SQLAlchemyError as error:
             raise error
 
     @staticmethod
-    def get_all_student_address(page) -> Pagination:
-        """
-        get all school address for get all address API
-        :params page
-        :return
-        """
-        try:
-            return db.session.query(AddressModel, StudentModel). \
-                filter(AddressModel.id == StudentModel.address_id).filter(
-                AddressModel.type == "student").paginate(page=page, error_out=False)
-        except SQLAlchemyError as error:
-            raise error
-
-    @staticmethod
-    def create_student(new_student):
+    def create_student(new_student: StudentModel) -> int:
         """
         create new student
         :param new_student:
@@ -144,7 +121,7 @@ class StudentModel(db.Model):
             raise error
 
     @staticmethod
-    def update_student(student_id, student) -> bool:
+    def update_student(student_id, student: StudentModel) -> bool:
         """
         update student info by id
         :param student_id:
@@ -170,7 +147,7 @@ class StudentModel(db.Model):
             raise error
 
     @staticmethod
-    def delete_student(student_id) -> bool:
+    def delete_student(student_id: int) -> bool:
         """
         delete student by id
         :param student_id:
@@ -185,3 +162,24 @@ class StudentModel(db.Model):
             db.session.rollback()
             raise error
 
+    @staticmethod
+    def get_students_by_query(page: int, query: str, per_page: int = 20) -> Pagination:
+        """
+        get students by name, father_name, mother_name and parents_occupation
+        :param page:
+        :param query:
+        :param per_page int
+        :return: user info list
+        """
+        try:
+            return db.session.query(StudentModel). \
+                join(AddressModel).filter(or_(StudentModel.name.ilike('%' + query + '%'),
+                                              StudentModel.father_name.ilike('%' + query + '%'),
+                                              StudentModel.mother_name.ilike('%' + query + '%'),
+                                              StudentModel.parents_occupation.ilike('%' + query + '%')),
+                                          ).paginate(
+                                        page=page,
+                                        per_page=per_page,
+                                        error_out=False)
+        except SQLAlchemyError as error:
+            raise error

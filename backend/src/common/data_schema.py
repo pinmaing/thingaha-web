@@ -2,7 +2,7 @@
 schema module for request body
 use python library Schema
 """
-from schema import Schema, Or
+from schema import Schema, Or, Regex
 
 address_schema = Schema({
     "division": str,
@@ -13,19 +13,41 @@ address_schema = Schema({
 })
 
 school_schema = Schema({
-    "school_name": str,
+    "name": str,
     "contact_info": str,
-    "address_id": int
+    "address_id": Or(None, int)
 })
 
 user_schema = Schema({
-    "name": str,
+    "username": Regex("^(?=[a-zA-Z0-9._]{6,20}$)(?!.*[_.]{2})[^_.].*[^_.]$"),
+    "display_name": str,
     "email": str,
-    "address_id": int,
+    "address_id": Or(None, int),
     "password": str,
     "role": str,
     "country": str,
     "donation_active": bool
+})
+
+user_update_schema = Schema({
+    "username": str,
+    "display_name": str,
+    "email": str,
+    "role": str,
+    "address_id": Or(None, int),
+    "country": str,
+    "donation_active": bool
+})
+
+password_reset_schema = Schema({
+    "user_id": int,
+    "password": str
+})
+
+password_change_schema = Schema({
+    "current_password": str,
+    "new_password": str,
+    "new_confirm_password": str
 })
 
 attendance_schema = Schema({
@@ -47,6 +69,11 @@ donation_schema = Schema({
     "paid_at": Or(None, str)
 })
 
+extra_funds_schema = Schema({
+    "mmk_amount": int,
+    "transfer_id": int
+})
+
 transfer_schema = Schema({
     "year": int,
     "month": str,
@@ -62,5 +89,5 @@ student_schema = Schema({
     "mother_name": str,
     "parents_occupation": str,
     "photo": str,
-    "address_id": int
+    "address_id": Or(None, int)
 })
